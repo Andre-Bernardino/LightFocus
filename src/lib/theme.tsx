@@ -5,23 +5,23 @@ type Theme = "dark" | "light";
 const STORAGE_KEY = "lightfocus-theme";
 
 const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void }>({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
 });
 
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
+  if (typeof window === "undefined") return "light";
   const saved = window.localStorage.getItem(STORAGE_KEY);
-  return saved === "light" ? "light" : "dark"; // dark é o padrão
+  return saved === "dark" ? "dark" : "light"; // claro é o padrão
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   // Sincroniza com a classe aplicada pelo script inline (evita flash)
   useEffect(() => {
     const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    setTheme(getInitialTheme() === "light" ? "light" : current);
+    setTheme(getInitialTheme() === "dark" ? "dark" : current === "dark" ? "dark" : "light");
   }, []);
 
   useEffect(() => {
