@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Brain, CheckCircle2, ListTodo, LogOut, Moon, Plus, Sparkles, Sun } from "lucide-react";
+import { Bot, Brain, CheckCircle2, ListTodo, LogOut, Moon, Plus, Sparkles, Sun } from "lucide-react";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -112,6 +112,11 @@ function Index() {
             </div>
           </div>
           <div className="flex items-center gap-1">
+            <Button asChild variant="ghost" size="icon">
+              <Link to="/chat" aria-label="Conversar com a assistente de foco" title="Conversar com a IA">
+                <Bot className="h-5 w-5" />
+              </Link>
+            </Button>
             <CheckInDialog />
             <RemindersDialog />
             <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Alternar tema">
