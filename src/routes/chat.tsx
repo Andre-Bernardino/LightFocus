@@ -30,7 +30,10 @@ export const Route = createFileRoute("/chat")({
       { title: "Assistente de foco — LightFocus" },
       { name: "description", content: "Converse com a assistente de foco do LightFocus." },
       { property: "og:title", content: "Assistente de foco — LightFocus" },
-      { property: "og:description", content: "Apoio acolhedor para organizar ideias e dar o próximo passo." },
+      {
+        property: "og:description",
+        content: "Apoio acolhedor para organizar ideias e dar o próximo passo.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -56,7 +59,11 @@ function ChatPage() {
   }, [status]);
 
   if (configured && (loading || !user)) {
-    return <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">Carregando…</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+        Carregando…
+      </div>
+    );
   }
 
   return (
@@ -96,19 +103,28 @@ function ChatPage() {
                   className="h-28 w-28 object-contain"
                 />
                 <div className="mt-2 space-y-2">
-                  <h2 className="font-display text-xl font-semibold">O que está ocupando sua cabeça?</h2>
+                  <h2 className="font-display text-xl font-semibold">
+                    O que está ocupando sua cabeça?
+                  </h2>
                   <p className="mx-auto max-w-sm text-sm leading-6 text-muted-foreground">
-                    Pode contar do seu jeito. Eu ajudo a organizar e escolher um passo pequeno para começar.
+                    Pode contar do seu jeito. Eu ajudo a organizar e escolher um passo pequeno para
+                    começar.
                   </p>
                 </div>
               </ConversationEmptyState>
             ) : (
               messages.map((message) => (
                 <Message key={message.id} from={message.role}>
-                  <MessageContent className={message.role === "user" ? "bg-primary text-primary-foreground" : undefined}>
+                  <MessageContent
+                    className={
+                      message.role === "user" ? "bg-primary text-primary-foreground" : undefined
+                    }
+                  >
                     {message.parts.map((part, index) =>
                       part.type === "text" ? (
-                        <MessageResponse key={`${message.id}-${index}`}>{part.text}</MessageResponse>
+                        <MessageResponse key={`${message.id}-${index}`}>
+                          {part.text}
+                        </MessageResponse>
                       ) : null,
                     )}
                   </MessageContent>
@@ -123,7 +139,10 @@ function ChatPage() {
               </Message>
             )}
             {error && (
-              <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-foreground">
+              <p
+                role="alert"
+                className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-foreground"
+              >
                 {error.message || "Não foi possível responder agora. Tente novamente."}
               </p>
             )}

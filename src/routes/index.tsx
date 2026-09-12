@@ -1,7 +1,17 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Bot, Brain, CheckCircle2, ListTodo, LogOut, Moon, Plus, Sparkles, Sun } from "lucide-react";
+import {
+  Bot,
+  Brain,
+  CheckCircle2,
+  ListTodo,
+  LogOut,
+  Moon,
+  Plus,
+  Sparkles,
+  Sun,
+} from "lucide-react";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -27,14 +37,12 @@ export const Route = createFileRoute("/")({
       { title: "LightFocus — Tarefas para quem tem TDAH" },
       {
         name: "description",
-        content:
-          "Veja suas tarefas, filtre por status e adicione novas atividades no LightFocus.",
+        content: "Veja suas tarefas, filtre por status e adicione novas atividades no LightFocus.",
       },
       { property: "og:title", content: "LightFocus — Tarefas para quem tem TDAH" },
       {
         property: "og:description",
-        content:
-          "Veja suas tarefas, filtre por status e adicione novas atividades no LightFocus.",
+        content: "Veja suas tarefas, filtre por status e adicione novas atividades no LightFocus.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -45,8 +53,16 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { tasks, addTask, updateTask, deleteTask, toggleComplete, startTask, toggleStep, setSteps } =
-    useTasks();
+  const {
+    tasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    toggleComplete,
+    startTask,
+    toggleStep,
+    setSteps,
+  } = useTasks();
   const decompose = useServerFn(decomposeTask);
   const [filter, setFilter] = useState<Filter>("todas");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -88,7 +104,7 @@ function Index() {
     setSteps(task.id, result.steps);
   }
 
-  const editingTask = editingId ? tasks.find((t) => t.id === editingId) ?? null : null;
+  const editingTask = editingId ? (tasks.find((t) => t.id === editingId) ?? null) : null;
 
   if (configured && (loading || !user)) {
     return (
@@ -113,7 +129,11 @@ function Index() {
           </div>
           <div className="flex items-center gap-1">
             <Button asChild variant="ghost" size="icon">
-              <Link to="/chat" aria-label="Conversar com a assistente de foco" title="Conversar com a IA">
+              <Link
+                to="/chat"
+                aria-label="Conversar com a assistente de foco"
+                title="Conversar com a IA"
+              >
                 <Bot className="h-5 w-5" />
               </Link>
             </Button>
@@ -141,7 +161,11 @@ function Index() {
 
         <section className="mt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <Tabs value={filter} onValueChange={(v) => setFilter(v as Filter)} className="w-full sm:w-auto">
+            <Tabs
+              value={filter}
+              onValueChange={(v) => setFilter(v as Filter)}
+              className="w-full sm:w-auto"
+            >
               <TabsList className="grid h-10 w-full grid-cols-4 sm:w-auto sm:grid-cols-4">
                 <TabsTrigger value="todas" className="gap-1.5 text-xs">
                   <ListTodo className="h-3.5 w-3.5" />
@@ -173,9 +197,7 @@ function Index() {
                     <ListTodo className="h-6 w-6" />
                   </div>
                   <h3 className="mt-4 font-display text-lg font-semibold">
-                    {filter === "todas"
-                      ? "Nenhuma tarefa por aqui"
-                      : "Nenhuma tarefa neste status"}
+                    {filter === "todas" ? "Nenhuma tarefa por aqui" : "Nenhuma tarefa neste status"}
                   </h3>
                   <p className="mt-1 max-w-xs text-sm text-muted-foreground">
                     {filter === "todas"
@@ -223,8 +245,8 @@ function Index() {
 
         {openTasks.length > 0 && (
           <p className="mt-8 text-center text-xs text-muted-foreground">
-            {openTasks.length} {openTasks.length === 1 ? "tarefa aberta" : "tarefas abertas"}.
-            Foque na próxima.
+            {openTasks.length} {openTasks.length === 1 ? "tarefa aberta" : "tarefas abertas"}. Foque
+            na próxima.
           </p>
         )}
       </div>

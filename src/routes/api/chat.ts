@@ -20,7 +20,10 @@ export const Route = createFileRoute("/api/chat")({
 
         const apiKey = process.env["LOVABLE_API_KEY"];
         if (!apiKey) {
-          return Response.json({ message: "A conversa com IA ainda não está configurada." }, { status: 500 });
+          return Response.json(
+            { message: "A conversa com IA ainda não está configurada." },
+            { status: 500 },
+          );
         }
 
         const messages = body.messages as UIMessage[];

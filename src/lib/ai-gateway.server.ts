@@ -54,7 +54,10 @@ export function getLovableRunId(request: Request) {
   return request.headers.get(RUN_ID_HEADER)?.trim() || undefined;
 }
 
-export async function withLovableRunId(response: Response, gateway: ReturnType<typeof createLovableResponsesProvider>) {
+export async function withLovableRunId(
+  response: Response,
+  gateway: ReturnType<typeof createLovableResponsesProvider>,
+) {
   if (!response.body) return response;
   const reader = response.body.getReader();
   const firstChunk = reader.read();
