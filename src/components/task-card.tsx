@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { TaskReminderDialog } from "@/components/task-reminder-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -186,6 +187,7 @@ export function TaskCard({
                       : "Decompor com IA"}
                 </Button>
               )}
+              {task.status !== "concluida" && <TaskReminderDialog task={task} />}
               {task.status !== "concluida" && task.status !== "em_andamento" && (
                 <Button size="sm" onClick={() => onStart(task.id)} className="h-8 gap-1.5">
                   <Play className="h-3.5 w-3.5" />

@@ -11,6 +11,12 @@ export interface Recommendation {
   firstStep: string;
 }
 
+export interface ReminderSuggestion {
+  scheduledAt: string;
+  message: string;
+  reason: string;
+}
+
 const PRIORITY_SCORE = { alta: 3, media: 2, baixa: 1 } as const;
 const ENERGY_RANK = { baixa: 1, media: 2, alta: 3 } as const;
 
@@ -149,6 +155,29 @@ export function buildDecomposeMessages(task: { title: string; description: strin
         descricao: task.description,
         minutos_estimados: task.estimatedMinutes,
       }),
+    },
+  ];
+}
+
+export function buildReminderMessages(task: {
+  title: string;
+  description: string;
+  estimatedMinutes: number;
+  priority: string;
+  energy: string;
+}, nowIso: string) {
+  return [
+    {
+      role: "system" as const,
+      content:
+        "Você ajuda uma pessoa com TDAH a escolher um lembrete gentil e realista. " +
+        "Escolha um horário futuro nas próximas 24 horas, evitando madrugada. Use o horário local informado. " +
+        "Responda APENAS com JSON válido, sem markdown: " +
+        '{"scheduled_at":"data ISO com fuso horário","message":"lembrete curto em pt-BR","reason":"explicação acolhedora em uma frase"}.',
+    },
+    {
+      role: "user" as const,
+      content: JSON.stringify({ agora: nowIso, tarefa: task }),
     },
   ];
 }
