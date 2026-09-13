@@ -135,8 +135,8 @@ function ChatPage() {
                     O que está ocupando sua cabeça?
                   </h2>
                   <p className="mx-auto max-w-sm text-sm leading-6 text-muted-foreground">
-                    Pode contar do seu jeito. Eu vejo suas tarefas abertas e ajudo a organizar o dia,
-                    criar lembretes e escolher um passo pequeno.
+                    Pode contar do seu jeito. Eu vejo suas tarefas abertas e ajudo a organizar o
+                    dia, criar lembretes e escolher um passo pequeno.
                   </p>
                 </div>
               </ConversationEmptyState>

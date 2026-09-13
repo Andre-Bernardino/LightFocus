@@ -110,18 +110,32 @@ export function RemindersDialog() {
           <div className="space-y-2 border-t border-border pt-4">
             <Label>Lembretes de atividades</Label>
             {taskReminders.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Use “Lembrar” em uma tarefa para criar um aviso com ajuda da IA.</p>
+              <p className="text-sm text-muted-foreground">
+                Use “Lembrar” em uma tarefa para criar um aviso com ajuda da IA.
+              </p>
             ) : (
               <div className="space-y-2">
                 {taskReminders.map((reminder) => (
-                  <div key={reminder.id} className="flex items-start justify-between gap-3 rounded-md bg-secondary p-3">
+                  <div
+                    key={reminder.id}
+                    className="flex items-start justify-between gap-3 rounded-md bg-secondary p-3"
+                  >
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{reminder.taskTitle}</p>
                       <p className="text-xs text-muted-foreground">
-                        {new Date(reminder.scheduledAt).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+                        {new Date(reminder.scheduledAt).toLocaleString("pt-BR", {
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        })}
                       </p>
                     </div>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => removeTaskReminder(reminder.id)} aria-label={`Excluir lembrete de ${reminder.taskTitle}`}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 shrink-0"
+                      onClick={() => removeTaskReminder(reminder.id)}
+                      aria-label={`Excluir lembrete de ${reminder.taskTitle}`}
+                    >
                       <X className="h-3.5 w-3.5" />
                     </Button>
                   </div>

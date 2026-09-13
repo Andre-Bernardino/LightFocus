@@ -55,7 +55,9 @@ export function RemindersProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const stored = JSON.parse(raw) as Partial<RemindersSettings> & { taskReminders?: TaskReminder[] };
+        const stored = JSON.parse(raw) as Partial<RemindersSettings> & {
+          taskReminders?: TaskReminder[];
+        };
         setSettings({
           enabled: stored.enabled ?? DEFAULT_SETTINGS.enabled,
           times: stored.times ?? DEFAULT_SETTINGS.times,
@@ -78,13 +80,20 @@ export function RemindersProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const saveSettings = useCallback((next: RemindersSettings) => {
-    setSettings(next);
-    persist(next, taskReminders);
-    if (next.enabled && typeof Notification !== "undefined" && Notification.permission === "default") {
-      void Notification.requestPermission();
-    }
-  }, [persist, taskReminders]);
+  const saveSettings = useCallback(
+    (next: RemindersSettings) => {
+      setSettings(next);
+      persist(next, taskReminders);
+      if (
+        next.enabled &&
+        typeof Notification !== "undefined" &&
+        Notification.permission === "default"
+      ) {
+        void Notification.requestPermission();
+      }
+    },
+    [persist, taskReminders],
+  );
 
   const addTaskReminder = useCallback(
     (reminder: Omit<TaskReminder, "id">) => {
@@ -136,7 +145,9 @@ export function RemindersProvider({ children }: { children: ReactNode }) {
 
     const check = () => {
       const now = Date.now();
-      const due = taskReminders.filter((reminder) => new Date(reminder.scheduledAt).getTime() <= now);
+      const due = taskReminders.filter(
+        (reminder) => new Date(reminder.scheduledAt).getTime() <= now,
+      );
       if (due.length === 0) return;
 
       due.forEach((reminder) => {

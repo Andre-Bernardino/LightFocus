@@ -142,15 +142,15 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-        <TasksProvider>
-        <CheckInProvider>
-        <RemindersProvider>
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-          <AiLauncher />
-        </RemindersProvider>
-        </CheckInProvider>
-        </TasksProvider>
+          <TasksProvider>
+            <CheckInProvider>
+              <RemindersProvider>
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+                <AiLauncher />
+              </RemindersProvider>
+            </CheckInProvider>
+          </TasksProvider>
         </AuthProvider>
         <Toaster position="bottom-right" richColors />
       </ThemeProvider>

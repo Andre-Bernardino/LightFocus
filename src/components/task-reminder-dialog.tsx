@@ -86,21 +86,45 @@ export function TaskReminderDialog({ task }: { task: Task }) {
           <DialogDescription>Escolha o horário ou peça uma sugestão gentil à IA.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          <Button type="button" variant="outline" className="w-full gap-2" onClick={() => void suggest()} disabled={loading}>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full gap-2"
+            onClick={() => void suggest()}
+            disabled={loading}
+          >
             <Sparkles className="h-4 w-4" />
             {loading ? "Pensando no melhor horário…" : "Sugerir com IA"}
           </Button>
           <div className="space-y-2">
             <Label htmlFor={`reminder-${task.id}`}>Data e horário</Label>
-            <Input id={`reminder-${task.id}`} type="datetime-local" value={scheduledAt} onChange={(event) => setScheduledAt(event.target.value)} />
+            <Input
+              id={`reminder-${task.id}`}
+              type="datetime-local"
+              value={scheduledAt}
+              onChange={(event) => setScheduledAt(event.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor={`reminder-message-${task.id}`}>Mensagem</Label>
-            <Input id={`reminder-message-${task.id}`} value={message} onChange={(event) => setMessage(event.target.value)} placeholder={`Hora de continuar “${task.title}”.`} />
+            <Input
+              id={`reminder-message-${task.id}`}
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              placeholder={`Hora de continuar “${task.title}”.`}
+            />
           </div>
-          {reason && <p className="rounded-md bg-secondary px-3 py-2 text-sm text-secondary-foreground">{reason}</p>}
-          <Button className="w-full" onClick={save}>Salvar lembrete</Button>
-          <p className="text-center text-xs text-muted-foreground">O aviso aparece enquanto o LightFocus estiver aberto.</p>
+          {reason && (
+            <p className="rounded-md bg-secondary px-3 py-2 text-sm text-secondary-foreground">
+              {reason}
+            </p>
+          )}
+          <Button className="w-full" onClick={save}>
+            Salvar lembrete
+          </Button>
+          <p className="text-center text-xs text-muted-foreground">
+            O aviso aparece enquanto o LightFocus estiver aberto.
+          </p>
         </div>
       </DialogContent>
     </Dialog>

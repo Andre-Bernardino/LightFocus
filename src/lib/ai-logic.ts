@@ -84,7 +84,8 @@ export function heuristicRecommend(checkIn: CheckIn, tasks: Task[]): Recommendat
   return {
     taskId: best.task.id,
     reason,
-    firstStep: best.task.steps.find((s) => !s.done)?.title ?? `Dar o primeiro passo em "${best.task.title}"`,
+    firstStep:
+      best.task.steps.find((s) => !s.done)?.title ?? `Dar o primeiro passo em "${best.task.title}"`,
   };
 }
 
@@ -139,14 +140,20 @@ export function buildRecommendMessages(checkIn: CheckIn, tasks: Task[]) {
   ];
 }
 
-export function buildDecomposeMessages(task: { title: string; description: string; estimatedMinutes: number }) {
+export function buildDecomposeMessages(task: {
+  title: string;
+  description: string;
+  estimatedMinutes: number;
+}) {
   return [
     {
       role: "system" as const,
       content:
         "Você ajuda pessoas com TDAH a decompor tarefas em micro-passos acionáveis. " +
         "Gere de 3 a 6 passos: o primeiro deve ser ridículamente fácil (2-5 min) para destravar o início; cada passo deve começar com um verbo de ação e caber em até 15 minutos. " +
-        "Responda APENAS com JSON válido, sem markdown: {" + '"steps": string[]' + "} (passos em pt-BR).",
+        "Responda APENAS com JSON válido, sem markdown: {" +
+        '"steps": string[]' +
+        "} (passos em pt-BR).",
     },
     {
       role: "user" as const,
@@ -159,13 +166,16 @@ export function buildDecomposeMessages(task: { title: string; description: strin
   ];
 }
 
-export function buildReminderMessages(task: {
-  title: string;
-  description: string;
-  estimatedMinutes: number;
-  priority: string;
-  energy: string;
-}, nowIso: string) {
+export function buildReminderMessages(
+  task: {
+    title: string;
+    description: string;
+    estimatedMinutes: number;
+    priority: string;
+    energy: string;
+  },
+  nowIso: string,
+) {
   return [
     {
       role: "system" as const,

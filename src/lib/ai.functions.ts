@@ -60,7 +60,8 @@ export const recommendTask = createServerFn({ method: "POST" })
     return {
       taskId: parsed.task_id,
       reason: parsed.reason || fallback?.reason || "Esta é a tarefa com melhor encaixe para agora.",
-      firstStep: parsed.first_step || fallback?.firstStep || "Dar o primeiro passo, por menor que seja.",
+      firstStep:
+        parsed.first_step || fallback?.firstStep || "Dar o primeiro passo, por menor que seja.",
     };
   });
 
@@ -123,7 +124,11 @@ export const suggestTaskReminder = createServerFn({ method: "POST" })
       reason?: string;
     }>(raw);
     const scheduledAt = parsed?.scheduled_at ? new Date(parsed.scheduled_at) : null;
-    if (!scheduledAt || Number.isNaN(scheduledAt.getTime()) || scheduledAt <= new Date(data.nowIso)) {
+    if (
+      !scheduledAt ||
+      Number.isNaN(scheduledAt.getTime()) ||
+      scheduledAt <= new Date(data.nowIso)
+    ) {
       return fallback;
     }
 
