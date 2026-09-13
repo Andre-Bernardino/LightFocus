@@ -9,3 +9,4 @@
 - [x] Garantir a decomposição de atividades com IA no fluxo de criação e nas tarefas existentes.
 - [x] Ajustar a assistente para fazer perguntas separadas, uma por vez.
 - [x] Preparar o LightFocus para instalação e testes no Android sem gerar APK.
+- [ ] Gerar um APK Android instalável diretamente, sem envio à Google Play.
