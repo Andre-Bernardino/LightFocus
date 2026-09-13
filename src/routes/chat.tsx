@@ -2,7 +2,7 @@ import { useChat } from "@ai-sdk/react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { DefaultChatTransport } from "ai";
 import { ArrowLeft, Brain, Moon, Sun } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import focusCompanion from "@/assets/focus-companion.png";
 import {
@@ -21,6 +21,8 @@ import {
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
+import { useCheckIn } from "@/lib/checkin-store";
+import { useTasks } from "@/lib/task-store";
 import { useTheme } from "@/lib/theme";
 
 export const Route = createFileRoute("/chat")({
@@ -41,9 +43,35 @@ export const Route = createFileRoute("/chat")({
   component: ChatPage,
 });
 
-const transport = new DefaultChatTransport({ api: "/api/chat" });
-
 function ChatPage() {
+  const { tasks } = useTasks();
+  const { checkIn, isToday } = useCheckIn();
+  const context = useMemo(
+    () => ({
+      tasks: tasks
+        .filter((task) => task.status !== "concluida")
+        .map(({ id, title, description, priority, energy, estimatedMinutes, status, steps }) => ({
+          id,
+          title,
+          description,
+          priority,
+          energy,
+          estimatedMinutes,
+          status,
+          steps: steps.filter((step) => !step.done).map((step) => step.title),
+        })),
+      checkIn: isToday ? checkIn : null,
+    }),
+    [checkIn, isToday, tasks],
+  );
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: "/api/chat",
+        prepareSendMessagesRequest: ({ messages }) => ({ body: { messages, context } }),
+      }),
+    [context],
+  );
   const { messages, sendMessage, status, stop, error } = useChat({ transport });
   const { theme, toggleTheme } = useTheme();
   const { user, loading, configured } = useAuth();
@@ -107,8 +135,8 @@ function ChatPage() {
                     O que está ocupando sua cabeça?
                   </h2>
                   <p className="mx-auto max-w-sm text-sm leading-6 text-muted-foreground">
-                    Pode contar do seu jeito. Eu ajudo a organizar e escolher um passo pequeno para
-                    começar.
+                    Pode contar do seu jeito. Eu vejo suas tarefas abertas e ajudo a organizar o
+                    dia, criar lembretes e escolher um passo pequeno.
                   </p>
                 </div>
               </ConversationEmptyState>

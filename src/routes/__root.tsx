@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { AiLauncher } from "@/components/ai-launcher";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../lib/auth";
@@ -141,14 +142,15 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-        <TasksProvider>
-        <CheckInProvider>
-        <RemindersProvider>
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-        </RemindersProvider>
-        </CheckInProvider>
-        </TasksProvider>
+          <TasksProvider>
+            <CheckInProvider>
+              <RemindersProvider>
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+                <AiLauncher />
+              </RemindersProvider>
+            </CheckInProvider>
+          </TasksProvider>
         </AuthProvider>
         <Toaster position="bottom-right" richColors />
       </ThemeProvider>

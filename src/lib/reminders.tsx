@@ -18,6 +18,14 @@ export interface RemindersSettings {
   times: string[];
 }
 
+export interface TaskReminder {
+  id: string;
+  taskId: string;
+  taskTitle: string;
+  scheduledAt: string;
+  message: string;
+}
+
 const DEFAULT_SETTINGS: RemindersSettings = {
   enabled: false,
   times: ["09:00", "14:00", "19:00"],
@@ -25,7 +33,10 @@ const DEFAULT_SETTINGS: RemindersSettings = {
 
 interface RemindersContextValue {
   settings: RemindersSettings;
+  taskReminders: TaskReminder[];
   saveSettings: (next: RemindersSettings) => void;
+  addTaskReminder: (reminder: Omit<TaskReminder, "id">) => void;
+  removeTaskReminder: (id: string) => void;
 }
 
 const RemindersContext = createContext<RemindersContextValue | null>(null);
@@ -37,28 +48,75 @@ function nowHHMM(): string {
 
 export function RemindersProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<RemindersSettings>(DEFAULT_SETTINGS);
+  const [taskReminders, setTaskReminders] = useState<TaskReminder[]>([]);
   const fired = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setSettings({ ...DEFAULT_SETTINGS, ...(JSON.parse(raw) as RemindersSettings) });
+      if (raw) {
+        const stored = JSON.parse(raw) as Partial<RemindersSettings> & {
+          taskReminders?: TaskReminder[];
+        };
+        setSettings({
+          enabled: stored.enabled ?? DEFAULT_SETTINGS.enabled,
+          times: stored.times ?? DEFAULT_SETTINGS.times,
+        });
+        setTaskReminders(stored.taskReminders ?? []);
+      }
     } catch {
       /* ignora */
     }
   }, []);
 
-  const saveSettings = useCallback((next: RemindersSettings) => {
-    setSettings(next);
+  const persist = useCallback((nextSettings: RemindersSettings, nextReminders: TaskReminder[]) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ ...nextSettings, taskReminders: nextReminders }),
+      );
     } catch {
       /* ignora */
     }
-    if (next.enabled && typeof Notification !== "undefined" && Notification.permission === "default") {
-      void Notification.requestPermission();
-    }
   }, []);
+
+  const saveSettings = useCallback(
+    (next: RemindersSettings) => {
+      setSettings(next);
+      persist(next, taskReminders);
+      if (
+        next.enabled &&
+        typeof Notification !== "undefined" &&
+        Notification.permission === "default"
+      ) {
+        void Notification.requestPermission();
+      }
+    },
+    [persist, taskReminders],
+  );
+
+  const addTaskReminder = useCallback(
+    (reminder: Omit<TaskReminder, "id">) => {
+      const next = [...taskReminders, { ...reminder, id: crypto.randomUUID() }].sort((a, b) =>
+        a.scheduledAt.localeCompare(b.scheduledAt),
+      );
+      setTaskReminders(next);
+      persist(settings, next);
+      if (typeof Notification !== "undefined" && Notification.permission === "default") {
+        void Notification.requestPermission();
+      }
+    },
+    [persist, settings, taskReminders],
+  );
+
+  const removeTaskReminder = useCallback(
+    (id: string) => {
+      const next = taskReminders.filter((reminder) => reminder.id !== id);
+      setTaskReminders(next);
+      persist(settings, next);
+    },
+    [persist, settings, taskReminders],
+  );
 
   useEffect(() => {
     if (!settings.enabled || settings.times.length === 0) return;
@@ -82,7 +140,36 @@ export function RemindersProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(id);
   }, [settings]);
 
-  const value = useMemo(() => ({ settings, saveSettings }), [settings, saveSettings]);
+  useEffect(() => {
+    if (taskReminders.length === 0) return;
+
+    const check = () => {
+      const now = Date.now();
+      const due = taskReminders.filter(
+        (reminder) => new Date(reminder.scheduledAt).getTime() <= now,
+      );
+      if (due.length === 0) return;
+
+      due.forEach((reminder) => {
+        toast.info(reminder.taskTitle, { description: reminder.message, duration: 10000 });
+        if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+          new Notification(reminder.taskTitle, { body: reminder.message });
+        }
+      });
+      const next = taskReminders.filter((reminder) => !due.some((item) => item.id === reminder.id));
+      setTaskReminders(next);
+      persist(settings, next);
+    };
+
+    check();
+    const id = setInterval(check, 20000);
+    return () => clearInterval(id);
+  }, [persist, settings, taskReminders]);
+
+  const value = useMemo(
+    () => ({ settings, taskReminders, saveSettings, addTaskReminder, removeTaskReminder }),
+    [settings, taskReminders, saveSettings, addTaskReminder, removeTaskReminder],
+  );
 
   return <RemindersContext.Provider value={value}>{children}</RemindersContext.Provider>;
 }

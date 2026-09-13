@@ -3,11 +3,13 @@ import { z } from "zod";
 
 import {
   buildDecomposeMessages,
+  buildReminderMessages,
   buildRecommendMessages,
   heuristicRecommend,
   heuristicSteps,
   parseJsonFromAi,
   type Recommendation,
+  type ReminderSuggestion,
 } from "./ai-logic";
 import { callAiGateway } from "./ai-gateway.server";
 import type { Task } from "./tasks";
@@ -58,7 +60,8 @@ export const recommendTask = createServerFn({ method: "POST" })
     return {
       taskId: parsed.task_id,
       reason: parsed.reason || fallback?.reason || "Esta é a tarefa com melhor encaixe para agora.",
-      firstStep: parsed.first_step || fallback?.firstStep || "Dar o primeiro passo, por menor que seja.",
+      firstStep:
+        parsed.first_step || fallback?.firstStep || "Dar o primeiro passo, por menor que seja.",
     };
   });
 
@@ -87,4 +90,51 @@ export const decomposeTask = createServerFn({ method: "POST" })
       .slice(0, 6);
 
     return { steps: steps.length > 0 ? steps : heuristicSteps(data.title) };
+  });
+
+/** Sugere um horário e uma mensagem de lembrete para uma tarefa. */
+export const suggestTaskReminder = createServerFn({ method: "POST" })
+  .inputValidator((data) =>
+    z
+      .object({
+        title: z.string().min(1),
+        description: z.string(),
+        estimatedMinutes: z.number(),
+        priority: z.enum(["baixa", "media", "alta"]),
+        energy: z.enum(["baixa", "media", "alta"]),
+        nowIso: z.string(),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }): Promise<ReminderSuggestion> => {
+    const fallbackDate = new Date(data.nowIso);
+    fallbackDate.setHours(fallbackDate.getHours() + 1, 0, 0, 0);
+    const fallback: ReminderSuggestion = {
+      scheduledAt: fallbackDate.toISOString(),
+      message: `Hora de dar um pequeno passo em “${data.title}”.`,
+      reason: "Um lembrete em uma hora ajuda a retomar sem criar pressão.",
+    };
+
+    const raw = await callAiGateway(buildReminderMessages(data, data.nowIso));
+    if (!raw) return fallback;
+
+    const parsed = parseJsonFromAi<{
+      scheduled_at?: string;
+      message?: string;
+      reason?: string;
+    }>(raw);
+    const scheduledAt = parsed?.scheduled_at ? new Date(parsed.scheduled_at) : null;
+    if (
+      !scheduledAt ||
+      Number.isNaN(scheduledAt.getTime()) ||
+      scheduledAt <= new Date(data.nowIso)
+    ) {
+      return fallback;
+    }
+
+    return {
+      scheduledAt: scheduledAt.toISOString(),
+      message: parsed?.message?.trim() || fallback.message,
+      reason: parsed?.reason?.trim() || fallback.reason,
+    };
   });
