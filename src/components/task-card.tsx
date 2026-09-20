@@ -188,6 +188,14 @@ export function TaskCard({
                 </Button>
               )}
               {task.status !== "concluida" && <TaskReminderDialog task={task} />}
+              {task.status !== "concluida" && (
+                <Button asChild size="sm" variant="outline" className="h-8 gap-1.5">
+                  <Link to="/chat" search={{ taskId: task.id }}>
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    Conversar sobre esta tarefa
+                  </Link>
+                </Button>
+              )}
               {task.status !== "concluida" && task.status !== "em_andamento" && (
                 <Button size="sm" onClick={() => onStart(task.id)} className="h-8 gap-1.5">
                   <Play className="h-3.5 w-3.5" />
