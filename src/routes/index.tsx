@@ -65,6 +65,7 @@ function Index() {
   } = useTasks();
   const decompose = useServerFn(decomposeTask);
   const [filter, setFilter] = useState<Filter>("todas");
+  const [period, setPeriod] = useState<"hoje" | "todas">("todas");
   const [editingId, setEditingId] = useState<string | null>(null);
   const { theme, toggleTheme } = useTheme();
   const { user, loading, configured, signOut } = useAuth();
