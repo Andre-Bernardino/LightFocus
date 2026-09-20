@@ -75,9 +75,13 @@ function Index() {
   }, [configured, loading, user, navigate]);
 
   const filteredTasks = useMemo(() => {
-    if (filter === "todas") return tasks;
-    return tasks.filter((t) => t.status === filter);
-  }, [tasks, filter]);
+    const byPeriod =
+      period === "hoje"
+        ? tasks.filter((t) => new Date(t.createdAt).toDateString() === new Date().toDateString())
+        : tasks;
+    if (filter === "todas") return byPeriod;
+    return byPeriod.filter((t) => t.status === filter);
+  }, [tasks, filter, period]);
 
   const openTasks = useMemo(() => tasks.filter((t) => t.status !== "concluida"), [tasks]);
 
