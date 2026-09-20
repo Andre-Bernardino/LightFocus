@@ -82,7 +82,7 @@ function ChatPage() {
         })),
       checkIn: isToday ? checkIn : null,
     }),
-    [checkIn, isToday, tasks],
+    [activeTask, checkIn, isToday, tasks],
   );
   const transport = useMemo(
     () =>
