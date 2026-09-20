@@ -20,6 +20,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskCard } from "@/components/task-card";
 import { TaskForm } from "@/components/task-form";
 import { TaskStats } from "@/components/task-stats";
+import { ProgressCard } from "@/components/progress-card";
 import { CheckInDialog } from "@/components/checkin-dialog";
 import { RecommendationPanel } from "@/components/recommendation-panel";
 import { RemindersDialog } from "@/components/reminders-dialog";
