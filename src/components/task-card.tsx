@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   CheckCircle2,
   Circle,
   Clock,
+  MessageCircle,
   MoreHorizontal,
   Play,
   Sparkles,
