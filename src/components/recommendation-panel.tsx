@@ -104,33 +104,13 @@ export function RecommendationPanel() {
   const task: Task | undefined = rec ? tasks.find((t) => t.id === rec.taskId) : undefined;
 
   return (
-    <Card className="mt-6 border-primary/30 bg-primary/5">
-      <CardContent className="p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
-            <Sparkles className="h-4 w-4" />
-            Recomendação para agora
-          </div>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => void fetchRec()}
-              disabled={loading}
-              className="gap-1.5"
-            >
-              <RefreshCw className={loading ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
-              Atualizar
-            </Button>
-            <CheckInDialog
-              trigger={
-                <Button variant="ghost" size="sm">
-                  Refazer check-in
-                </Button>
-              }
-            />
-          </div>
+    <Card className="h-full border-primary/30 bg-primary/5">
+      <CardContent className="flex h-full flex-col p-5">
+        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+          <Sparkles className="h-3.5 w-3.5" />
+          Sugestão para agora
         </div>
+
 
         <p className="mt-1 text-xs text-muted-foreground">
           {ENERGY_LABELS[checkIn.energy]} · Humor: {MOOD_LABELS[checkIn.mood]} ·{" "}
