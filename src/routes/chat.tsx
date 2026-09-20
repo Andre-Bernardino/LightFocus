@@ -139,6 +139,12 @@ function ChatPage() {
       </header>
 
       <div className="mx-auto flex h-[calc(100vh-65px)] w-full max-w-3xl flex-col px-4 sm:px-6">
+        {activeTask && (
+          <div className="mt-3 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm">
+            <span className="text-muted-foreground">Conversando sobre: </span>
+            <span className="font-semibold text-foreground">{activeTask.title}</span>
+          </div>
+        )}
         <Conversation className="min-h-0">
           <ConversationContent className="mx-auto w-full max-w-2xl py-8">
             {messages.length === 0 ? (
