@@ -79,7 +79,7 @@ export function RecommendationPanel() {
 
   if (!checkIn) {
     return (
-      <Card className="mt-6 border-dashed border-primary/40 bg-primary/5">
+      <Card className="h-full border-dashed border-primary/40 bg-primary/5">
         <CardContent className="flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-display text-lg font-semibold">Como você está agora?</h2>
@@ -104,33 +104,13 @@ export function RecommendationPanel() {
   const task: Task | undefined = rec ? tasks.find((t) => t.id === rec.taskId) : undefined;
 
   return (
-    <Card className="mt-6 border-primary/30 bg-primary/5">
-      <CardContent className="p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
-            <Sparkles className="h-4 w-4" />
-            Recomendação para agora
-          </div>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => void fetchRec()}
-              disabled={loading}
-              className="gap-1.5"
-            >
-              <RefreshCw className={loading ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
-              Atualizar
-            </Button>
-            <CheckInDialog
-              trigger={
-                <Button variant="ghost" size="sm">
-                  Refazer check-in
-                </Button>
-              }
-            />
-          </div>
+    <Card className="h-full border-primary/30 bg-primary/5">
+      <CardContent className="flex h-full flex-col p-5">
+        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+          <Sparkles className="h-3.5 w-3.5" />
+          Sugestão para agora
         </div>
+
 
         <p className="mt-1 text-xs text-muted-foreground">
           {ENERGY_LABELS[checkIn.energy]} · Humor: {MOOD_LABELS[checkIn.mood]} ·{" "}
@@ -160,6 +140,26 @@ export function RecommendationPanel() {
             Nenhuma tarefa aberta para recomendar. Aproveite a pausa. 🌿
           </p>
         )}
+
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchRec()}
+            disabled={loading}
+            className="gap-1.5"
+          >
+            <RefreshCw className={loading ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
+            Atualizar
+          </Button>
+          <CheckInDialog
+            trigger={
+              <Button size="sm" variant="secondary">
+                Refazer check-in
+              </Button>
+            }
+          />
+        </div>
       </CardContent>
     </Card>
   );

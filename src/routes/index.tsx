@@ -20,6 +20,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskCard } from "@/components/task-card";
 import { TaskForm } from "@/components/task-form";
 import { TaskStats } from "@/components/task-stats";
+import { ProgressCard } from "@/components/progress-card";
 import { CheckInDialog } from "@/components/checkin-dialog";
 import { RecommendationPanel } from "@/components/recommendation-panel";
 import { RemindersDialog } from "@/components/reminders-dialog";
@@ -65,6 +66,7 @@ function Index() {
   } = useTasks();
   const decompose = useServerFn(decomposeTask);
   const [filter, setFilter] = useState<Filter>("todas");
+  const [period, setPeriod] = useState<"hoje" | "todas">("todas");
   const [editingId, setEditingId] = useState<string | null>(null);
   const { theme, toggleTheme } = useTheme();
   const { user, loading, configured, signOut } = useAuth();
@@ -75,11 +77,31 @@ function Index() {
   }, [configured, loading, user, navigate]);
 
   const filteredTasks = useMemo(() => {
-    if (filter === "todas") return tasks;
-    return tasks.filter((t) => t.status === filter);
-  }, [tasks, filter]);
+    const byPeriod =
+      period === "hoje"
+        ? tasks.filter((t) => new Date(t.createdAt).toDateString() === new Date().toDateString())
+        : tasks;
+    if (filter === "todas") return byPeriod;
+    return byPeriod.filter((t) => t.status === filter);
+  }, [tasks, filter, period]);
 
   const openTasks = useMemo(() => tasks.filter((t) => t.status !== "concluida"), [tasks]);
+
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bom dia";
+    if (hour < 18) return "Boa tarde";
+    return "Boa noite";
+  }, []);
+
+  const todayLabel = useMemo(() => {
+    const text = new Date().toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
+    return text.replace(/(^|\s|-)\p{Ll}/gu, (letter) => letter.toUpperCase());
+  }, []);
 
   function handleAdd(input: TaskInput, steps?: string[]) {
     const id = addTask(input);
@@ -155,12 +177,39 @@ function Index() {
           </div>
         </header>
 
+        <section className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            Seu espaço de foco
+          </p>
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {greeting}, vamos com calma.
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Você não precisa fazer tudo. Escolha o próximo passo.
+          </p>
+        </section>
+
         <TaskStats tasks={tasks} />
 
-        <RecommendationPanel />
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <ProgressCard tasks={tasks} />
+          <RecommendationPanel />
+        </div>
 
         <section className="mt-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Agenda do dia
+              </p>
+              <h2 className="mt-1 font-display text-xl font-bold tracking-tight sm:text-2xl">
+                {todayLabel}
+              </h2>
+            </div>
+            <TaskForm onSubmit={handleAdd} />
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Tabs
               value={filter}
               onValueChange={(v) => setFilter(v as Filter)}
@@ -186,7 +235,20 @@ function Index() {
               </TabsList>
             </Tabs>
 
-            <TaskForm onSubmit={handleAdd} />
+            <Tabs
+              value={period}
+              onValueChange={(v) => setPeriod(v as "hoje" | "todas")}
+              className="w-full sm:w-auto"
+            >
+              <TabsList className="grid h-10 w-full grid-cols-2 sm:w-auto">
+                <TabsTrigger value="hoje" className="text-xs">
+                  Hoje
+                </TabsTrigger>
+                <TabsTrigger value="todas" className="text-xs">
+                  Todas
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
 
           <div className="mt-6 space-y-3">
