@@ -160,12 +160,39 @@ function Index() {
           </div>
         </header>
 
+        <section className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            Seu espaço de foco
+          </p>
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {greeting}, vamos com calma.
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Você não precisa fazer tudo. Escolha o próximo passo.
+          </p>
+        </section>
+
         <TaskStats tasks={tasks} />
 
-        <RecommendationPanel />
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <ProgressCard tasks={tasks} />
+          <RecommendationPanel />
+        </div>
 
         <section className="mt-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Agenda do dia
+              </p>
+              <h2 className="mt-1 font-display text-xl font-bold tracking-tight sm:text-2xl">
+                {todayLabel}
+              </h2>
+            </div>
+            <TaskForm onSubmit={handleAdd} />
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Tabs
               value={filter}
               onValueChange={(v) => setFilter(v as Filter)}
