@@ -226,6 +226,21 @@ function ChatPage() {
               />
             </PromptInputFooter>
           </PromptInput>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {["⚡ Como simplificar esta tarefa?", "🔋 Estou com pouca energia para isso"].map(
+              (chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  disabled={status !== "ready"}
+                  onClick={() => void sendMessage({ text: chip })}
+                  className="rounded-full border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-50"
+                >
+                  {chip}
+                </button>
+              ),
+            )}
+          </div>
           <p className="mt-2 text-center text-xs text-muted-foreground">
             A conversa não fica salva ao sair desta página.
           </p>
