@@ -27,6 +27,9 @@ import { useTheme } from "@/lib/theme";
 
 export const Route = createFileRoute("/chat")({
   ssr: false,
+  validateSearch: (search: Record<string, unknown>): { taskId?: string } => ({
+    taskId: typeof search["taskId"] === "string" ? search["taskId"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Assistente de foco — LightFocus" },
