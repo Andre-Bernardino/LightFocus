@@ -218,7 +218,20 @@ function Index() {
               </TabsList>
             </Tabs>
 
-            <TaskForm onSubmit={handleAdd} />
+            <Tabs
+              value={period}
+              onValueChange={(v) => setPeriod(v as "hoje" | "todas")}
+              className="w-full sm:w-auto"
+            >
+              <TabsList className="grid h-10 w-full grid-cols-2 sm:w-auto">
+                <TabsTrigger value="hoje" className="text-xs">
+                  Hoje
+                </TabsTrigger>
+                <TabsTrigger value="todas" className="text-xs">
+                  Todas
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
 
           <div className="mt-6 space-y-3">
