@@ -140,6 +140,26 @@ export function RecommendationPanel() {
             Nenhuma tarefa aberta para recomendar. Aproveite a pausa. 🌿
           </p>
         )}
+
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchRec()}
+            disabled={loading}
+            className="gap-1.5"
+          >
+            <RefreshCw className={loading ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
+            Atualizar
+          </Button>
+          <CheckInDialog
+            trigger={
+              <Button size="sm" variant="secondary">
+                Refazer check-in
+              </Button>
+            }
+          />
+        </div>
       </CardContent>
     </Card>
   );
