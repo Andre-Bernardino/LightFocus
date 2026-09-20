@@ -86,6 +86,22 @@ function Index() {
 
   const openTasks = useMemo(() => tasks.filter((t) => t.status !== "concluida"), [tasks]);
 
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bom dia";
+    if (hour < 18) return "Boa tarde";
+    return "Boa noite";
+  }, []);
+
+  const todayLabel = useMemo(() => {
+    const text = new Date().toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
+    return text.replace(/(^|\s|-)\p{Ll}/gu, (letter) => letter.toUpperCase());
+  }, []);
+
   function handleAdd(input: TaskInput, steps?: string[]) {
     const id = addTask(input);
     if (steps && steps.length > 0) {
