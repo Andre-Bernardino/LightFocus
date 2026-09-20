@@ -79,7 +79,7 @@ export function RecommendationPanel() {
 
   if (!checkIn) {
     return (
-      <Card className="mt-6 border-dashed border-primary/40 bg-primary/5">
+      <Card className="h-full border-dashed border-primary/40 bg-primary/5">
         <CardContent className="flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-display text-lg font-semibold">Como você está agora?</h2>
