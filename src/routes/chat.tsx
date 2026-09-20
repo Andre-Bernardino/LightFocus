@@ -27,7 +27,7 @@ import { useTheme } from "@/lib/theme";
 
 export const Route = createFileRoute("/chat")({
   ssr: false,
-  validateSearch: (search: Record<string, unknown>): { taskId?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { taskId?: string | undefined } => ({
     taskId: typeof search["taskId"] === "string" ? search["taskId"] : undefined,
   }),
   head: () => ({
