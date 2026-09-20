@@ -49,8 +49,25 @@ export const Route = createFileRoute("/chat")({
 function ChatPage() {
   const { tasks } = useTasks();
   const { checkIn, isToday } = useCheckIn();
+  const { taskId } = Route.useSearch();
+  const activeTask = useMemo(
+    () => tasks.find((task) => task.id === taskId) ?? null,
+    [tasks, taskId],
+  );
   const context = useMemo(
     () => ({
+      activeTask: activeTask
+        ? {
+            id: activeTask.id,
+            title: activeTask.title,
+            description: activeTask.description,
+            priority: activeTask.priority,
+            energy: activeTask.energy,
+            estimatedMinutes: activeTask.estimatedMinutes,
+            status: activeTask.status,
+            steps: activeTask.steps.filter((step) => !step.done).map((step) => step.title),
+          }
+        : null,
       tasks: tasks
         .filter((task) => task.status !== "concluida")
         .map(({ id, title, description, priority, energy, estimatedMinutes, status, steps }) => ({
