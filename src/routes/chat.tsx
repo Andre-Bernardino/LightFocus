@@ -27,6 +27,9 @@ import { useTheme } from "@/lib/theme";
 
 export const Route = createFileRoute("/chat")({
   ssr: false,
+  validateSearch: (search: Record<string, unknown>): { taskId?: string | undefined } => ({
+    taskId: typeof search["taskId"] === "string" ? search["taskId"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Assistente de foco — LightFocus" },
@@ -46,8 +49,25 @@ export const Route = createFileRoute("/chat")({
 function ChatPage() {
   const { tasks } = useTasks();
   const { checkIn, isToday } = useCheckIn();
+  const { taskId } = Route.useSearch();
+  const activeTask = useMemo(
+    () => tasks.find((task) => task.id === taskId) ?? null,
+    [tasks, taskId],
+  );
   const context = useMemo(
     () => ({
+      activeTask: activeTask
+        ? {
+            id: activeTask.id,
+            title: activeTask.title,
+            description: activeTask.description,
+            priority: activeTask.priority,
+            energy: activeTask.energy,
+            estimatedMinutes: activeTask.estimatedMinutes,
+            status: activeTask.status,
+            steps: activeTask.steps.filter((step) => !step.done).map((step) => step.title),
+          }
+        : null,
       tasks: tasks
         .filter((task) => task.status !== "concluida")
         .map(({ id, title, description, priority, energy, estimatedMinutes, status, steps }) => ({
@@ -62,7 +82,7 @@ function ChatPage() {
         })),
       checkIn: isToday ? checkIn : null,
     }),
-    [checkIn, isToday, tasks],
+    [activeTask, checkIn, isToday, tasks],
   );
   const transport = useMemo(
     () =>
@@ -119,6 +139,12 @@ function ChatPage() {
       </header>
 
       <div className="mx-auto flex h-[calc(100vh-65px)] w-full max-w-3xl flex-col px-4 sm:px-6">
+        {activeTask && (
+          <div className="mt-3 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm">
+            <span className="text-muted-foreground">Conversando sobre: </span>
+            <span className="font-semibold text-foreground">{activeTask.title}</span>
+          </div>
+        )}
         <Conversation className="min-h-0">
           <ConversationContent className="mx-auto w-full max-w-2xl py-8">
             {messages.length === 0 ? (
@@ -200,6 +226,21 @@ function ChatPage() {
               />
             </PromptInputFooter>
           </PromptInput>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {["⚡ Como simplificar esta tarefa?", "🔋 Estou com pouca energia para isso"].map(
+              (chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  disabled={status !== "ready"}
+                  onClick={() => void sendMessage({ text: chip })}
+                  className="rounded-full border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-50"
+                >
+                  {chip}
+                </button>
+              ),
+            )}
+          </div>
           <p className="mt-2 text-center text-xs text-muted-foreground">
             A conversa não fica salva ao sair desta página.
           </p>
