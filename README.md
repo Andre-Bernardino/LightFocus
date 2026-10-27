@@ -1,4 +1,4 @@
-# Focus Flow
+# LightFocus
 
 https://github.com/evandro-freitas/appweblightfocus.git
 faça um projeto novo com base nesse que seja igual com cores rocho claro pra pessoas com tdah
