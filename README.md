@@ -145,17 +145,6 @@ O chat e a divisão de tarefas em passos usam o **Lovable AI Gateway**, que exig
 - **Lovable (mais simples):** clique em **Publish → Update**. A IA funciona e não é preciso configurar nada.
 - **Outras plataformas (ex.: Render):** o build usa o Nitro, que por padrão gera para Cloudflare. Para rodar em Node, gere o build com a variável `NITRO_PRESET=node-server` e inicie com `node .output/server/index.mjs`. Esse caminho não foi testado neste projeto. Veja a seção do assistente de IA acima.
 
-## Solução de problemas
-
-| Mensagem ou sintoma | Causa provável e o que fazer |
-| --- | --- |
-| "E-mail ou senha incorretos" com um usuário que existe | O app pode estar apontando para outro projeto Supabase. Confira `src/lib/supabase-project.ts` e as variáveis `VITE_SUPABASE_*`. |
-| "A confirmação de e-mail ainda está ligada no Supabase" | Desligue **Confirm email** (veja a seção de login) ou confirme a conta pelo SQL acima. |
-| Erro 429 ao criar conta | Limite de e-mails do Supabase. Desligue **Confirm email**. |
-| "Não carregou do banco: JWT issued at future" | Diferença de relógio de menos de 1 segundo entre servidores do Supabase. O app já tenta de novo sozinho. Se persistir, recarregue a página. |
-| Tela branca | Abra o console do navegador (F12) e veja o erro. Se for no site publicado, publique de novo. |
-| Tarefas não aparecem depois de recarregar | Confirme que `supabase/schema.sql` foi aplicado e que o RLS está ativo nas três tabelas. |
-| Projeto Supabase "Inactive" | Projetos gratuitos pausam por inatividade. Reative em **Restore project** no painel. |
 
 ## Licença
 
