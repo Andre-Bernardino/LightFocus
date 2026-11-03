@@ -140,11 +140,6 @@ O chat e a divisão de tarefas em passos usam o **Lovable AI Gateway**, que exig
 - **Rodando no Lovable:** a IA funciona sem configuração extra.
 - **Rodando fora do Lovable** (local, Render etc.): sem a chave, o chat responde "A conversa não está configurada" e as sugestões usam apenas as regras simples de `src/lib/ai-logic.ts`. Para ter IA fora do Lovable é preciso trocar o gateway por uma chave própria (por exemplo, OpenAI) em `src/lib/ai-gateway.server.ts` e `src/routes/api/chat.ts`.
 
-## Publicação
-
-- **Lovable (mais simples):** clique em **Publish → Update**. A IA funciona e não é preciso configurar nada.
-- **Outras plataformas (ex.: Render):** o build usa o Nitro, que por padrão gera para Cloudflare. Para rodar em Node, gere o build com a variável `NITRO_PRESET=node-server` e inicie com `node .output/server/index.mjs`. Esse caminho não foi testado neste projeto. Veja a seção do assistente de IA acima.
-
 
 ## Licença
 
