@@ -143,4 +143,4 @@ O chat e a divisão de tarefas em passos usam o **Lovable AI Gateway**, que exig
 
 ## Licença
 
-Projeto acadêmico (Projeto Integrador SENAC). André Bernardino e João Gabriel. Consulte os autores antes de reutilizar.
+Projeto acadêmico (Projeto Integrador SENAC). André Bernardino,João Gabriel,Evandro Freitas. Consulte os autores antes de reutilizar.
